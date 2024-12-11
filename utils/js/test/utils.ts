@@ -1,7 +1,7 @@
 /* tslint:disable: no-shadowed-variable */
 import playwright, { chromium, webkit, firefox } from 'playwright';
 
-import { TMethod } from '@amaui/models';
+import { TMethod } from '@onesy/models';
 
 export type TType = 'chromium' | 'firefox' | 'webkit';
 

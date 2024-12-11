@@ -22,7 +22,7 @@ const run = async () => {
     const paths = (await fg('build/umd/*.prod.min.js', { onlyFiles: true }));
 
     paths.push(
-      'https://unpkg.com/@amaui/utils@latest/umd/amaui-utils.prod.min.js'
+      'https://unpkg.com/@onesy/utils@latest/umd/onesy-utils.prod.min.js'
     );
 
     let value = `<!DOCTYPE html>

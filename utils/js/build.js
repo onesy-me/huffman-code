@@ -4,7 +4,7 @@ const yargs = require('yargs');
 const fse = require('fs-extra');
 const fg = require('fast-glob');
 
-const { promisify } = require('@amaui/utils');
+const { promisify } = require('@onesy/utils');
 
 const wd = process.cwd();
 const moduleFolder = path.basename(process.cwd());
@@ -166,7 +166,7 @@ async function addLicense() {
       if (exists) {
         const data = await fse.readFile(filePath, 'utf8');
 
-        if (data.indexOf('@license amaui') === -1) await fse.writeFile(filePath, license + data, 'utf8');
+        if (data.indexOf('@license onesy') === -1) await fse.writeFile(filePath, license + data, 'utf8');
       }
     })
   );
@@ -256,7 +256,7 @@ async function docsUpdateTypes(pathTypes, pathUse, isModules, options = {}) {
     previous: getName(previous),
     path: getName(pathTypes),
     next: getName(next),
-    lib: moduleFolder.replace('amaui-', '').replace(/[-_]/gi, ' ')
+    lib: moduleFolder.replace('onesy-', '').replace(/[-_]/gi, ' ')
   };
 
   if (names.path.includes('-')) names.path = capitalizedCammelCase(names.path);
@@ -407,7 +407,7 @@ async function docs() {
   // For each file find the appropriate use file
   // in docs public, and replace the api
   // with the new value
-  paths.md = path.resolve(wd, '../amaui/docs/public/assets/md/dev', moduleFolder.replace('amaui-', ''));
+  paths.md = path.resolve(wd, '../onesy/docs/public/assets/md/dev', moduleFolder.replace('onesy-', ''));
 
   paths.use = path.join(paths.md, 'use');
 

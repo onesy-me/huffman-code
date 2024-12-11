@@ -1,26 +1,26 @@
-import is from '@amaui/utils/is';
-import merge from '@amaui/utils/merge';
-import copy from '@amaui/utils/copy';
-import to from '@amaui/utils/to';
-import binaryStringToHexadecimal from '@amaui/utils/binaryStringToHexadecimal';
-import hexadecimalStringToBinary from '@amaui/utils/hexadecimalStringToBinary';
-import AmauiDate from '@amaui/date/AmauiDate';
-import duration from '@amaui/date/duration';
-import { TMethod } from '@amaui/models';
+import is from '@onesy/utils/is';
+import merge from '@onesy/utils/merge';
+import copy from '@onesy/utils/copy';
+import to from '@onesy/utils/to';
+import binaryStringToHexadecimal from '@onesy/utils/binaryStringToHexadecimal';
+import hexadecimalStringToBinary from '@onesy/utils/hexadecimalStringToBinary';
+import OnesyDate from '@onesy/date/OnesyDate';
+import duration from '@onesy/date/duration';
+import { TMethod } from '@onesy/models';
 
 export type TArrayVariant = 'preorder';
 
-interface IAmauiNode {
+interface IOnesyNode {
   value: number;
   word?: any;
   path?: string;
-  left: AmauiNode;
-  right: AmauiNode;
+  left: OnesyNode;
+  right: OnesyNode;
 
   [p: string]: any;
 }
 
-export class AmauiHuffmanCodeResponse {
+export class OnesyHuffmanCodeResponse {
 
   public constructor(
     public value: any = '',
@@ -44,9 +44,9 @@ export class AmauiHuffmanCodeResponse {
 
 }
 
-export class AmauiNode implements IAmauiNode {
-  public left: AmauiNode;
-  public right: AmauiNode;
+export class OnesyNode implements IOnesyNode {
+  public left: OnesyNode;
+  public right: OnesyNode;
 
   [p: string]: any;
 
@@ -62,7 +62,7 @@ export class AmauiNode implements IAmauiNode {
   }
 
   public get maxDepth(): number {
-    const maxDepthMethod = (value: AmauiNode): number => {
+    const maxDepthMethod = (value: OnesyNode): number => {
       if (value === undefined) return 0;
 
       return Math.max(1 + maxDepthMethod(value.left), 1 + maxDepthMethod(value.right));
@@ -72,30 +72,30 @@ export class AmauiNode implements IAmauiNode {
   }
 }
 
-interface IAmauiHuffmanTree {
-  root: AmauiNode;
+interface IOnesyHuffmanTree {
+  root: OnesyNode;
 }
 
-export class AmauiHuffmanTree implements IAmauiHuffmanTree {
-  public root: AmauiNode;
+export class OnesyHuffmanTree implements IOnesyHuffmanTree {
+  public root: OnesyNode;
 
-  public static make(value: Array<any>): AmauiHuffmanTree { return new AmauiHuffmanTree().make(value); }
+  public static make(value: Array<any>): OnesyHuffmanTree { return new OnesyHuffmanTree().make(value); }
 
   public get array(): Array<any> {
     const value = [];
 
-    this.preorder(this.root, (value_: AmauiNode) => {
+    this.preorder(this.root, (value_: OnesyNode) => {
       value.push(value_.word ? value_.word : value_ === this.root ? 0 : value_.path?.slice(-1));
     });
 
     return value;
   }
 
-  public isRoot(value: AmauiNode): boolean {
+  public isRoot(value: OnesyNode): boolean {
     return value === this.root;
   }
 
-  public preorder(value: AmauiNode, method: TMethod): void {
+  public preorder(value: OnesyNode, method: TMethod): void {
     if (value !== undefined && is('function', method)) {
       method(value, value.left, value.right);
 
@@ -104,41 +104,41 @@ export class AmauiHuffmanTree implements IAmauiHuffmanTree {
     }
   }
 
-  public make(value_: Array<any>): AmauiHuffmanTree {
+  public make(value_: Array<any>): OnesyHuffmanTree {
     const items = copy(value_);
 
-    const amauiHuffmanTree = new AmauiHuffmanTree();
+    const onesyHuffmanTree = new OnesyHuffmanTree();
 
-    amauiHuffmanTree.root = new AmauiNode();
-    amauiHuffmanTree.root.index = 0;
+    onesyHuffmanTree.root = new OnesyNode();
+    onesyHuffmanTree.root.index = 0;
 
-    function arrayToAmauiHuffmanTree(value: AmauiNode) {
+    function arrayToOnesyHuffmanTree(value: OnesyNode) {
       if (items[0] === '0' && !value.left) {
-        value.left = new AmauiNode();
+        value.left = new OnesyNode();
 
         value.left.index = 2 * value.index + 1;
         value.left.path = '0';
 
         items.splice(0, 1);
 
-        arrayToAmauiHuffmanTree(value.left);
+        arrayToOnesyHuffmanTree(value.left);
       }
 
       if (items[0] === '1' && !value.right) {
-        value.right = new AmauiNode();
+        value.right = new OnesyNode();
 
         value.right.index = 2 * value.index + 2;
         value.right.path = '1';
 
         items.splice(0, 1);
 
-        arrayToAmauiHuffmanTree(value.right);
+        arrayToOnesyHuffmanTree(value.right);
       }
 
       if (is('array', items[0])) {
         if (items[0].length) {
           if (!value.left) {
-            value.left = new AmauiNode(1, items[0][0]);
+            value.left = new OnesyNode(1, items[0][0]);
 
             value.left.index = 2 * value.index + 1;
             value.left.path = '0';
@@ -147,7 +147,7 @@ export class AmauiHuffmanTree implements IAmauiHuffmanTree {
           }
 
           if (!value.right && items[0].length) {
-            value.right = new AmauiNode(1, items[0][0]);
+            value.right = new OnesyNode(1, items[0][0]);
 
             value.right.index = 2 * value.index + 2;
             value.right.path = '1';
@@ -160,12 +160,12 @@ export class AmauiHuffmanTree implements IAmauiHuffmanTree {
         else items.splice(0, 1);
       }
 
-      if (items[0] === '1' && !value.right) arrayToAmauiHuffmanTree(value);
+      if (items[0] === '1' && !value.right) arrayToOnesyHuffmanTree(value);
     }
 
-    arrayToAmauiHuffmanTree(amauiHuffmanTree.root);
+    arrayToOnesyHuffmanTree(onesyHuffmanTree.root);
 
-    return amauiHuffmanTree;
+    return onesyHuffmanTree;
   }
 }
 
@@ -181,19 +181,19 @@ export const optionsDefault: IOptions = {
   base64: true
 };
 
-class AmauiHuffmanCode {
+class OnesyHuffmanCode {
   public options: IOptions;
-  public huffmanTree: AmauiHuffmanTree;
+  public huffmanTree: OnesyHuffmanTree;
   public probabilities: Record<string, number> = {};
   public values: Record<string, string> = {};
-  public response: AmauiHuffmanCodeResponse = new AmauiHuffmanCodeResponse();
+  public response: OnesyHuffmanCodeResponse = new OnesyHuffmanCodeResponse();
   private startTime: number;
 
-  public static get AmauiHuffmanCodeResponse() { return AmauiHuffmanCodeResponse; }
+  public static get OnesyHuffmanCodeResponse() { return OnesyHuffmanCodeResponse; }
 
-  public static get AmauiNode() { return AmauiNode; }
+  public static get OnesyNode() { return OnesyNode; }
 
-  public static get AmauiHuffmanTree() { return AmauiHuffmanTree; }
+  public static get OnesyHuffmanTree() { return OnesyHuffmanTree; }
 
   public static encodeValue(value: string): string {
     if (!(is('string', value) && value.length)) return '';
@@ -249,13 +249,13 @@ class AmauiHuffmanCode {
     return result;
   }
 
-  public static getValues(amauiHuffmanTree: AmauiHuffmanTree): Record<string, string> {
+  public static getValues(onesyHuffmanTree: OnesyHuffmanTree): Record<string, string> {
     const values = {};
     const leafs = [];
 
-    if (amauiHuffmanTree) {
-      amauiHuffmanTree.preorder(amauiHuffmanTree.root, (value: AmauiNode, left: AmauiNode, right: AmauiNode) => {
-        if (amauiHuffmanTree.isRoot(value)) {
+    if (onesyHuffmanTree) {
+      onesyHuffmanTree.preorder(onesyHuffmanTree.root, (value: OnesyNode, left: OnesyNode, right: OnesyNode) => {
+        if (onesyHuffmanTree.isRoot(value)) {
           value.path = value.maxDepth === 1 ? '0' : '';
 
           if (value.leaf) leafs.push(value);
@@ -281,7 +281,7 @@ class AmauiHuffmanCode {
   }
 
   public static decode(value: string, values: Record<string, string>) {
-    const instance = new AmauiHuffmanCode();
+    const instance = new OnesyHuffmanCode();
 
     instance.values = values;
 
@@ -296,7 +296,7 @@ class AmauiHuffmanCode {
     return to(value, 'string') as string;
   }
 
-  public get encoded(): AmauiHuffmanCodeResponse {
+  public get encoded(): OnesyHuffmanCodeResponse {
     return this.response;
   }
 
@@ -330,7 +330,7 @@ class AmauiHuffmanCode {
   }
 
   private init(): void {
-    this.startTime = AmauiDate.milliseconds;
+    this.startTime = OnesyDate.milliseconds;
 
     if (!Object.keys(this.probabilities).length && is('string', this.value)) {
       // Frequencies
@@ -345,28 +345,28 @@ class AmauiHuffmanCode {
       this.makeHuffmanTree();
 
       // Values
-      this.values = AmauiHuffmanCode.getValues(this.huffmanTree);
+      this.values = OnesyHuffmanCode.getValues(this.huffmanTree);
     }
 
     // Encode
     this.encode();
   }
 
-  public encode(): AmauiHuffmanCodeResponse {
-    const response: AmauiHuffmanCodeResponse = new AmauiHuffmanCodeResponse();
+  public encode(): OnesyHuffmanCodeResponse {
+    const response: OnesyHuffmanCodeResponse = new OnesyHuffmanCodeResponse();
 
     if (Object.keys(this.values).length && is('string', this.value)) {
       let value = Array.from(this.value).reduce((result, item) => result += (this.values[item] || item), '');
 
-      value = AmauiHuffmanCode.encodeValue(value);
+      value = OnesyHuffmanCode.encodeValue(value);
 
-      if (this.options.base64) value = AmauiHuffmanCode.encodeBase64(value);
+      if (this.options.base64) value = OnesyHuffmanCode.encodeBase64(value);
 
       response.value = value;
-      response.performance_milliseconds = AmauiDate.milliseconds - this.startTime;
+      response.performance_milliseconds = OnesyDate.milliseconds - this.startTime;
       response.performance = duration(response.performance_milliseconds) || '0 milliseconds';
       response.values = this.values;
-      response.values_encoded = AmauiHuffmanCode.encodeValues(this.values, this.options.encode_values);
+      response.values_encoded = OnesyHuffmanCode.encodeValues(this.values, this.options.encode_values);
       response.probabilities = this.probabilities;
       response.efficiency = this.efficiency;
       response.redundency = this.redundency;
@@ -386,14 +386,14 @@ class AmauiHuffmanCode {
     return response;
   }
 
-  public decode(value_: string): AmauiHuffmanCodeResponse {
-    if (!value_) return new AmauiHuffmanCodeResponse(value_);
+  public decode(value_: string): OnesyHuffmanCodeResponse {
+    if (!value_) return new OnesyHuffmanCodeResponse(value_);
 
-    const response = new AmauiHuffmanCodeResponse(value_);
+    const response = new OnesyHuffmanCodeResponse(value_);
 
-    const startTime = AmauiDate.milliseconds;
+    const startTime = OnesyDate.milliseconds;
 
-    const value = AmauiHuffmanCode.decodeValue(AmauiHuffmanCode.decodeBase64(value_));
+    const value = OnesyHuffmanCode.decodeValue(OnesyHuffmanCode.decodeBase64(value_));
 
     if (is('string', value) && Object.keys(this.values).length) {
       let input = value;
@@ -418,7 +418,7 @@ class AmauiHuffmanCode {
       }
 
       response.value = output;
-      response.performance_milliseconds = AmauiDate.milliseconds - startTime;
+      response.performance_milliseconds = OnesyDate.milliseconds - startTime;
       response.performance = duration(response.performance_milliseconds) || '0 milliseconds';
       response.original_byte_size = to(output, 'byte-size') as number;
       response.value_byte_size = to(value_, 'byte-size') as number;
@@ -445,13 +445,13 @@ class AmauiHuffmanCode {
     return this.probabilities;
   }
 
-  public makeHuffmanTree(): AmauiHuffmanTree {
+  public makeHuffmanTree(): OnesyHuffmanTree {
     let trees = [];
 
     Object.keys(this.probabilities).forEach(key => {
-      const amauiNode = new AmauiNode(this.probabilities[key], key);
+      const onesyNode = new OnesyNode(this.probabilities[key], key);
 
-      trees.push(amauiNode);
+      trees.push(onesyNode);
     });
 
     trees.sort((a, b) => a.value - b.value);
@@ -460,7 +460,7 @@ class AmauiHuffmanCode {
       const first = trees[0];
       const second = trees[1];
 
-      const newNode = new AmauiNode(first.value + second.value);
+      const newNode = new OnesyNode(first.value + second.value);
 
       const children = [first, second].sort((a, b) => {
         const aMaxDepth = a.maxDepth;
@@ -486,7 +486,7 @@ class AmauiHuffmanCode {
       trees.sort((a, b) => a.value - b.value);
     }
 
-    this.huffmanTree = new AmauiHuffmanTree();
+    this.huffmanTree = new OnesyHuffmanTree();
 
     this.huffmanTree.root = trees[0];
 
@@ -494,4 +494,4 @@ class AmauiHuffmanCode {
   }
 }
 
-export default AmauiHuffmanCode;
+export default OnesyHuffmanCode;
