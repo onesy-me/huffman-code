@@ -31,7 +31,7 @@ npm manifest:
     "name": "@onesy/huffman-code",
     "version": "1.0.11111",
     "description": "Huffman code",
-    "repository": "https://github.com/onesy-org/onesy-huffman-code.git",
+    "repository": "https://github.com/onesy-me/huffman-code.git",
     "author": "Lazar <lazareric.com@gmail.com>",
     "license": "MIT",
     "private": false,
