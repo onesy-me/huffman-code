@@ -32,7 +32,7 @@ npm manifest:
     "version": "1.0.11111",
     "description": "Huffman code",
     "repository": "https://github.com/onesy-me/huffman-code.git",
-    "author": "Lazar <lazareric.com@gmail.com>",
+    "author": "Lazar <lazareric2@gmail.com>",
     "license": "MIT",
     "private": false,
     "main": "./src/index.ts",
